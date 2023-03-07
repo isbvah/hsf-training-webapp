@@ -1,5 +1,3 @@
-// src/components/Courses.js
-
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 
@@ -34,6 +32,9 @@ const Courses = () => {
             <p>{course.description}</p>
             <a href={course.repository}>Repository</a>
             <a href={course.webpage}>Webpage</a>
+            {course.videos && (
+              <a href={course.videos}>Video Playlist</a>
+            )}
           </div>
         ))}
       </div>
