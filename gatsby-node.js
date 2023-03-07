@@ -1,18 +1,24 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/
- */
 
-/**
- * @type {import('gatsby').GatsbyNode['createPages']}
- */
-exports.createPages = async ({ actions }) => {
+
+const path = require("path")
+const { createFilePath } = require("gatsby-source-filesystem")
+const yaml = require("js-yaml")
+const fs = require("fs")
+
+exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
-  createPage({
-    path: "/using-dsg",
-    component: require.resolve("./src/templates/using-dsg.js"),
-    context: {},
-    defer: true,
+
+  const courseTemplate = path.resolve("./src/components/courses.js")
+  const courses = yaml.load(fs.readFileSync("./src/data/courses.yaml"))
+
+  courses.forEach((course) => {
+    createPage({
+      path: `/course/${course.id}`,
+      component: courseTemplate,
+      context: {
+        course,
+      },
+    })
   })
 }
+
