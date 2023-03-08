@@ -7,21 +7,37 @@ const HeaderWrapper = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
+  background-color: #f8f8f8;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+`
+
+const HomeLink = styled(Link)`
+  font-size: 1.5rem;
+  color: #333;
+  text-decoration: none;
+`
+
+const NavLinks = styled.nav`
+  display: flex;
 `
 
 const NavLink = styled(Link)`
   margin-left: 1rem;
   color: #333;
   text-decoration: none;
+  font-weight: bold;
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 const Header = () => (
   <HeaderWrapper>
-    <Link to="/">Home</Link>
-    <nav>
+    <HomeLink to="/">Home</HomeLink>
+    <NavLinks>
       <NavLink to="/courses">Courses</NavLink>
       <NavLink to="/blog">Blog</NavLink>
-    </nav>
+    </NavLinks>
   </HeaderWrapper>
 )
 

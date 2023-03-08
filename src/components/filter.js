@@ -1,9 +1,48 @@
-import React, { useState } from "react"
-import { useStaticQuery, graphql } from "gatsby"
+import React, { useState } from "react";
+import Courses from "./courses.js";
+import { useStaticQuery, graphql } from "gatsby";
+import styled from "styled-components";
+
+// Create styled components
+const Section = styled.section`
+  padding: 20px;
+  border: 1px solid #ccc;
+`;
+
+const H2 = styled.h2`
+  font-size: 24px;
+  margin-bottom: 10px;
+`;
+
+const FilterContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+`;
+
+const FilterItem = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Label = styled.label`
+  margin-right: 10px;
+`;
+
+const Select = styled.select`
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Input = styled.input`
+  margin-right: 5px;
+`;
 
 const Filter = () => {
-  const [status, setStatus] = useState("all")
-  const [hasVideos, setHasVideos] = useState(false)
+  const [status, setStatus] = useState("all");
+  const [hasVideos, setHasVideos] = useState(false);
 
   const data = useStaticQuery(graphql`
     query {
@@ -17,75 +56,66 @@ const Filter = () => {
             status
             videos
             webpage
+            heroImage
           }
         }
       }
     }
-  `)
+  `);
 
-  const courses = data.allCoursesYaml.edges.map((edge) => edge.node)
+  const courses = data.allCoursesYaml.edges.map(function (edge) {
+    return edge.node;
+  });
 
-  const filteredCourses = courses.filter((course) => {
+  const filteredCourses = courses.filter(function (course) {
     // Filter by status
     if (status !== "all" && course.status !== status) {
-      return false
+      return false;
     }
 
     // Filter by videos
     if (hasVideos && !course.videos) {
-      return false
+      return false;
     }
 
-    return true
-  })
+    return true;
+  });
 
-  const handleStatusChange = (e) => {
-    setStatus(e.target.value)
+  function handleStatusChange(e) {
+    setStatus(e.target.value);
   }
 
-  const handleHasVideosChange = (e) => {
-    setHasVideos(e.target.checked)
+  function handleHasVideosChange(e) {
+    setHasVideos(e.target.checked);
   }
 
   return (
-    <section id="filter">
-      <h2>Filter</h2>
-      <div className="filter-container">
-        <div className="filter-item">
-          <label htmlFor="status">Status:</label>
-          <select id="status" value={status} onChange={handleStatusChange}>
+    <Section id="filter">
+      <H2>Filter</H2>
+      <FilterContainer>
+        <FilterItem>
+          <Label htmlFor="status">Status:</Label>
+          <Select id="status" value={status} onChange={handleStatusChange}>
             <option value="all">All</option>
             <option value="stable">Stable</option>
             <option value="beta">Beta</option>
             <option value="alpha">Alpha</option>
-          </select>
-        </div>
-        <div className="filter-item">
-          <label htmlFor="videos">Videos:</label>
-          <input
+          </Select>
+        </FilterItem>
+        <FilterItem>
+          <Label htmlFor="videos">Videos:</Label>
+          <Input
             id="videos"
             type="checkbox"
             checked={hasVideos}
             onChange={handleHasVideosChange}
           />
-        </div>
-      </div>
-      <div className="courses-container">
-        {filteredCourses.map((course) => (
-          <div key={course.id} className="course-card">
-            <h3>{course.name}</h3>
-            <p>{course.description}</p>
-            <a href={course.repository}>Repository</a>
-            <a href={course.webpage}>Webpage</a>
-            {course.videos && (
-              <a href={course.videos}>Video playlist</a>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
+        </FilterItem>
+      </FilterContainer>
+      <Courses courses={filteredCourses} />
+    </Section>
+  );
+};
 
-export default Filter
+export default Filter;
 
